@@ -1,0 +1,9 @@
+name: CherryCooldowns
+version: ["1.0.0"]
+main: com.cherry.cooldowns.Main
+api: ["1.0.0"]
+authors: ["CherryTeam"]
+permissions:
+  cherry.permissions.cooldown.all:
+    description: "Allow player to use all items without cooldowns"
+    default: "op"

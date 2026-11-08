@@ -1,0 +1,5 @@
+message_format: "&cHey! You can't use this item, wait: %cooldown%s"
+cooldowns: 
+  minecraft:ender_pearl: 10
+  minecraft:golden_apple: 15
+  minecraft:enchanted_golden_apple: 60
