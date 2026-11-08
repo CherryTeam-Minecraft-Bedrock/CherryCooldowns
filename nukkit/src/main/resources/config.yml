@@ -1,4 +1,5 @@
 message_format: "&cHey! You can't use this item, wait: %cooldown%s"
+actionbar_format: "&cCooldown: %cooldown%s"
 cooldowns: 
   minecraft:ender_pearl: 10
   minecraft:golden_apple: 15

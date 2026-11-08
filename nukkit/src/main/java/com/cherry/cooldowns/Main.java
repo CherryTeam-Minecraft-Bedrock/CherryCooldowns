@@ -48,7 +48,7 @@ public class Main extends PluginBase implements Listener {
                     if (!(time instanceof Integer)) continue;
                     if ((int) time <= 0) continue;
                     cooldownsManager.register(new Cooldown(id, (int) time));
-                } 
+                }
             }
             getServer().getPluginManager().registerEvents(this, this);
             this.getLogger().info(TextFormat.RED + "  ____ _                           _____");
@@ -59,14 +59,16 @@ public class Main extends PluginBase implements Listener {
             this.getLogger().info(TextFormat.RED + "                            |___/");
             this.getLogger().info(TextFormat.YELLOW + "MIT License");
             this.getLogger().info("GitHub repository: " + TextFormat.RED + "https://github.com/CherryTeam-Minecraft-Bedrock/CherryCooldowns");
+            actionBarCooldownsRun();
         } catch (Exception e) {
             getLogger().error(e.getMessage());
         }
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
-    public void onItemConsume(PlayerItemConsumeEvent event) {
+    private void onItemConsume(PlayerItemConsumeEvent event) {
         Player player = event.getPlayer();
+        if (player.hasPermission("cherry.permissions.cooldown.all")) return;
         UUID uuid = player.getUniqueId();
         Item item = event.getItem();
         long cooldownTime = cooldowns.getOrDefault(uuid, Map.of()).getOrDefault(item.getNamespaceId(), (long) 0);
@@ -82,8 +84,9 @@ public class Main extends PluginBase implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = false)
-    public void onItemUse(PlayerInteractEvent event) {
+    private void onItemUse(PlayerInteractEvent event) {
         Player player = event.getPlayer();
+        if (player.hasPermission("cherry.permissions.cooldown.all")) return;
         UUID uuid = player.getUniqueId();
         Item item = event.getItem();
         if ((item instanceof ItemEdible)) return;
@@ -98,5 +101,17 @@ public class Main extends PluginBase implements Listener {
         int time = cooldownsManager.getTime(item.getNamespaceId());
         if (time <= 0) return;
         cooldowns.computeIfAbsent(uuid, k -> new ConcurrentHashMap<>()).put(item.getNamespaceId(), (System.currentTimeMillis() + time * 1000));
+    }
+
+    private void actionBarCooldownsRun() {
+        getServer().getScheduler().scheduleRepeatingTask(this, () -> {
+            for (Player player : getServer().getOnlinePlayers().values()) {
+                if (player.hasPermission("cherry.permissions.cooldown.all")) continue;
+                String itemId = player.getInventory().getItemInHand().getNamespaceId();
+                long cooldownTime = cooldowns.getOrDefault(player.getUniqueId(), Map.of()).getOrDefault(itemId, (long) 0);
+                if ((cooldownTime - System.currentTimeMillis()) <= 0) continue;
+                player.sendActionBar(TextFormat.colorize('&', getConfig().getString("actionbar_format", "&cCooldown: %cooldown%s").replaceAll("%cooldown%", String.valueOf((cooldownTime - System.currentTimeMillis()) / 1000))));
+            }
+        }, 20);
     }
 }

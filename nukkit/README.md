@@ -3,14 +3,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Java 17](https://img.shields.io/badge/Java-17-orange)
 ![Platform](https://img.shields.io/badge/platform-Nukkit--MOT-green)
-![Version](https://img.shields.io/badge/version-1.0.0-informational)
+![Version](https://img.shields.io/badge/version-1.0.1-informational)
 
 A lightweight item cooldown management plugin and Java API for **Nukkit-MOT** (Minecraft: Bedrock Edition) servers.
 
 - **Item Interaction & Consumption Cooldowns** – automatically sets delay for consuming or right-clicking items (e.g. Ender Pearls, Golden Apples).
+- **Action Bar Feedback** – real-time visual display in the player's Action Bar while holding an item that is currently on cooldown.
 - **Persistent Storage** – registered item cooldown durations are automatically saved to `cooldowns.properties`.
 - **Public Java API** – `CooldownsManager` and `Cooldown` for registering and modifying item cooldown durations dynamically from other plugins.
-- **Configurable Message Format** – customizable action warning message with `%cooldown%` placeholder.
+- **Configurable Message Formats** – customizable chat warnings and action bar formats with `%cooldown%` placeholder.
 
 ---
 
@@ -43,7 +44,7 @@ A lightweight item cooldown management plugin and Java API for **Nukkit-MOT** (M
 
 ## Installation
 
-1. Download `cooldowns-1.0.0.jar` from the [Releases](../../releases) page.
+1. Download `cooldowns-1.0.1.jar` from the [Releases](../../releases) page.
 2. Place the `.jar` file into your server's `plugins/` directory.
 3. Start or restart the server. The plugin will generate `plugins/CherryCooldowns/config.yml` and `plugins/CherryCooldowns/cooldowns.properties`.
 4. Edit `config.yml` to adjust item cooldowns and messaging to your liking.
@@ -58,6 +59,7 @@ A lightweight item cooldown management plugin and Java API for **Nukkit-MOT** (M
 
 ```yaml
 message_format: "&cHey! You can't use this item, wait: %cooldown%s"
+actionbar_format: "&cCooldown: %cooldown%s"
 cooldowns: 
   minecraft:ender_pearl: 10
   minecraft:golden_apple: 15
@@ -66,7 +68,8 @@ cooldowns:
 
 | Option | Type | Description |
 |---|---|---|
-| `message_format` | string | Message sent to a player when attempting to use an item while on cooldown. Supports `&` colour codes and `%cooldown%` placeholder. |
+| `message_format` | string | Message sent to a player in chat when attempting to use an item while on cooldown. Supports `&` colour codes and `%cooldown%` placeholder. |
+| `actionbar_format` | string | Action bar message displayed periodically when holding an item that is currently on cooldown. Supports `&` colour codes and `%cooldown%` placeholder. |
 | `cooldowns.<item_namespace>` | integer | Cooldown duration in seconds for a given item namespace ID (e.g. `minecraft:ender_pearl`). |
 
 ### Permissions
@@ -93,7 +96,7 @@ depend: ["CherryCooldowns"]
 <dependency>
   <groupId>com.cherry</groupId>
   <artifactId>cooldowns</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <scope>provided</scope>
 </dependency>
 ```
@@ -101,8 +104,8 @@ depend: ["CherryCooldowns"]
 Install it into your local Maven repository:
 
 ```bash
-mvn install:install-file -Dfile=cooldowns-1.0.0.jar \
-  -DgroupId=com.cherry -DartifactId=cooldowns -Dversion=1.0.0 -Dpackaging=jar
+mvn install:install-file -Dfile=cooldowns-1.0.1.jar \
+  -DgroupId=com.cherry -DartifactId=cooldowns -Dversion=1.0.1 -Dpackaging=jar
 ```
 
 ---
@@ -185,7 +188,7 @@ cd CherryCooldowns
 mvn clean package
 ```
 
-The output jar will be located at `target/cooldowns-1.0.0.jar`.
+The output jar will be located at `target/cooldowns-1.0.1.jar`.
 
 ---
 
